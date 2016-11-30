@@ -1,0 +1,88 @@
+// The name of the enclosing directory always becomes the module/package name unless
+// a project definition exists which defines it.
+
+// You can include another file which will be inserted verbatim, but if it causes
+// an include loop, it will skip the repeating files since all files only get included once.
+include "anotherexample.ril"
+
+// Enumerations can be defined, but they get treated like constants called
+// for example "Target.win-x86".
+enum Target
+{
+	win-x86 = 1,
+	win-x64 = 2,
+	apple-arm = 4,
+	android-arm = 8,
+}
+
+// Functions work in Ruxil similarly to Rux, however you can't use object/interface notations.
+// Only basic types are supported so interface vtables and structure definitions must be
+// explicitly defined.
+func getNextValue(inValue int32) : int32
+{
+	inc inValue
+	ret inValue
+}
+
+// Methods can be defined with special attributes that change their behavior and
+// processing.  This method will only be generated for x86 targets and will compile
+// as x86 assembly.  However, the "ret" assembly instruction always takes return parameters
+// since interjecting an assembly "ret" is not safe, so it isn't permitted unless you add
+// the RAW target flag.  However, if you define a RAW method you need to define the whole
+// call and return convention yourself, which increases the risk you could break the caller
+// registers unless you know what you are doing.  Normally the used registers are detected
+// and restored as needed as part of the call cleanup.  The same applies to "call" because normally
+// the calling convention is automatically detected, but you can call without parameters
+// and manually assign the registers or push onto the stack as appropriate in a RAW method.
+// Either way a stack imbalance or register misuse is usually detected by the assembler,
+// but in a RAW method that isn't easily possible so it is discouraged except under special
+// cases like operating system or core library development.  Also, for methods that do not return
+// a value, "ret" is automatically added if left out unless the method is RAW, but cause an
+// error if left out when it does return a value unless the method is RAW.
+// One bonus of platform targeted methods is that you can create the same method multiple times for
+// different target platforms and they don't conflict because they are only included for the specified
+// target platform.  The target platform identifier could be "x86", "win-x86", "osx-x86", etc.
+// The more specific the target definition the more selective it is.  You can also target multiple
+// targets by separating the targets with ";", or you can exclude a specific target.  The default
+// is to include "all" targets unless specified.
+[Target(Include = win-x86, Compiler = x86-asm)]
+func numberToText(inValue : byte) : byte // uint8 is equivalent
+{
+	mov al,inValue
+	add al,0x30
+	ret al  // ret takes parameters except in RAW mode
+}
+
+// Calling convention defaults to the Rux calling convention which uses registers where possible
+// The prime sieve: Daisy-chain filter processes together.
+func sieve()
+{
+	lda type(Channel<int>) // Load typeinfo reference of "Channel<int>"
+	make              	   // Create a new channel.
+	lda r0                 // Load the result 0 reference of make
+	lda generate           // Load the reference to the generate func
+	run                    // Start generate() as a subprocess using 'run', the loaded parameters
+	                       // shift left when generate is executed inside run.
+loop:
+	lda ch
+	call Channel<int>.getValue
+	mv prime, r0
+	lda "\n"
+	call fmt.Print
+
+	lda type(Channel<int>)
+	make
+	mv ch1, r0
+	lda ch
+	lda ch1
+	lda prime
+	lda filter
+	run
+	mv ch, ch1
+	jmp loop
+}
+
+// Braces may optionally be on the same line, but this style is discouraged.
+func main() {
+	sieve()
+}

@@ -1,0 +1,70 @@
+// Defining a package name is optional and by default unnecessary as the folder name becomes part of the package name
+package main
+
+// Quotations are not required for package identifiers and identifiers are fully qualified
+// where dots separate folder names for namespacing.
+// So my.namespace would be expected in the my/namespace path by default.
+import fmt
+import core.io
+// Ambiguity should be rare, but can be resolved by a local rename
+import test = mypackage.test
+// Importing directly is supported, but discouraged except when needed because local names
+// override imports and conflicting names in multiple packages could be a problem.
+import .    = somepackage.importlocal
+
+// Send the sequence 2, 3, 4, … into the output I/O pipe (yield).
+// The presence of the yield statement changes this method into an output pipe,
+func generate() pipeout<int> // io.Receiver<out T>
+{
+	// Braces are not optional to prevent situations like the "GOTO FAIL;" bug
+	// The x..y is a sequence iterator where the y can be left out to mean infinite
+	// Since the sequence iterator will be of type io.Receiver<int> you could just
+	// return that instead of creating an iterator function, but we created one
+	// anyway for demonstration.
+	for i in 2..
+	{
+		yield i  // Send 'i' into output I/O pipe.
+
+	}
+	
+}
+
+// Copy the values from I/O pipe receiver 'src' into the output I/O pipe
+// sender (yield) returning its receiver, removing those divisible by 'prime'.
+// The yield statement changes this method into an output pipe,
+func filter(src pipeout<int>, prime int) pipeout<int>
+{
+	// Braces can be on a new line for all control structures
+	// An io.Receiver<out T> operates as an iterator
+	for i in src  // Loop over values received from 'src'.
+	{
+		if i%prime != 0
+		{
+			yield i  // Yield sends 'i' into the I/O pipe output.
+		}
+	}
+}
+
+// The prime sieve: Daisy-chain filter processes together.
+func sieve()
+{
+	p := run generate()     // Start generate() as a subprocess using 'run' and return an output pipe.
+	for
+	{
+		prime := p.Receive()
+		// Embedding a variable or expression in a string is supported by default, optionally
+		// formatting can be provided by a colon after the name or ecpression.
+		fmt.Print("{prime}\n")
+		// Because filter is an output pipe method it will return the output pipe immediately
+		// when run starts, the pipe provides an async receiver.
+		p1 := run filter(p, prime)
+		p = p1
+	}
+}
+
+// Braces may optionally be on the same line (K&R/1TB style), but Braces
+// on the same line as above (Allman style) is encouraged as the
+// default and the linter enforces this.
+func main() {
+	sieve()
+}

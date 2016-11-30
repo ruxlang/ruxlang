@@ -1,0 +1,19 @@
+# Use the default set of linters, plus golint and govet
+linters:
+  disable-all: true
+  enable:
+    - revive
+    - govet
+    - deadcode
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+issues:
+  exclude-use-default: false
+run:
+  modules-download-mode: vendor
