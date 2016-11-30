@@ -57,4 +57,7 @@ OK, that was a bad pun.  Seriously though.
    explicit declarations of those implementations
  
  * it should not require any definitions or imports to write a basic program it should
-   be as simple as: `func main(){ Print("Hello World") }`
+   be as simple as:
+   ```golang
+   func main(){ Print("Hello World") }
+   ```
