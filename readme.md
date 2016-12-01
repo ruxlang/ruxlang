@@ -45,19 +45,33 @@ So where do we "Go" from here?
 
 OK, that was a bad pun.  Seriously though.
 
- * like "C" the language should not be pedantic about brace style.  It is a
+ * Like "C", the language should not be pedantic about brace style.  It is a
    developer codebase preference, not a point of contention that any "C" style
    language should alienate people over.
-   If a codebase decides on a style, it should be possible to enforce, but not a
-   language requirement.
+   
+ * If a codebase decides on a style, it should be possible to enforce, but not a
+   language requirement.  A project wide preference for brace style should be set.
+   All preferences can be overridden where necessary.
 
- * like RUST packaging binary libraries should be possible
+ * Like RUST, packaging binary libraries should be possible and specifying library
+   exports to "C" based languages made easy.
 
- * like Go it should apply all interface definitions at compile time without requiring
-   explicit declarations of those implementations
+ * Like Go, it should apply all interface definitions at compile time without requiring
+   explicit declarations of those implementations.
  
- * it should not require any definitions or imports to write a basic program it should
-   be as simple as:
-   ```golang
-   func main(){ Print("Hello World") }
+ * Unlike most modern languages these days, it should not require any definitions or
+   imports to write a basic program.
+   It should be as simple as:
+   ```c
+   func main()
+   {
+       io.PrintLine("Hello World")
+   }
    ```
+ 
+ * Like RUST, binding to "C" dynamic link libraries should be easy, but not require
+   pulling in the whole gcc/msvc toolkit.  Keep it simple, build it fast.
+   
+ * Automatic "C" header file handling should be available so library exports can be
+   imported automatically and map against builtin types wherever possible. Also,
+   data marshalling should be automatic to remove most the guesswork.
