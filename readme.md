@@ -77,7 +77,7 @@ OK, that was a bad pun.  Seriously though.
    data marshalling should be automatic to remove most the guesswork.
  
  * Like C# 6.0 the `string` builtin type should be a first class citizen of the language
-   with formatting built into the design.  Use `fmt.Sprintf()` to format strings,
+   with formatting built into the design.  Use `fmt.Sprintf()` to format strings?
    Think again!  Format it within the quotes automatically inside braces (`{}`):
    ```go
    var y = 32
