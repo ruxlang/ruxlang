@@ -62,7 +62,7 @@ OK, that was a bad pun.  Seriously though.
  * Unlike most modern languages these days, it should not require any definitions or
    imports to write a basic program.
    It should be as simple as:
-   ```c
+   ```go
    func main()
    {
        io.PrintLine("Hello World")
@@ -75,3 +75,23 @@ OK, that was a bad pun.  Seriously though.
  * Automatic "C" header file handling should be available so library exports can be
    imported automatically and map against builtin types wherever possible. Also,
    data marshalling should be automatic to remove most the guesswork.
+ 
+ * Like C# 6.0 the `string` builtin type should be a first class citizen of the language
+   with formatting built into the design.  Use `fmt.Sprintf()` to format strings,
+   Think again!  Format it within the quotes automatically inside braces (`{}`):
+   ```go
+   var y = 32
+   var x = "y = {y}"
+   ```
+   
+   or specify the format after the colon (`:`) for hexadecimal output:
+   ```go
+   var y = 32
+   var x = "{y} in hexadecimal is {y:X}"
+   ```
+   
+   and most single line expressions are supported:
+   ```go
+   var y = 3
+   var x = "{y} + 5 = {y + 5}"
+   ```
