@@ -712,6 +712,7 @@ COMMENT
     :  '/*' .*? '*/' -> skip
     ;
 
+// Support comments for C-style // and shell style #
 LINE_COMMENT
-    :  '//' ~[\r\n]* STMTEND -> skip
+    :  ( ( '//' ~[\r\n]* STMTEND ) | ( '#' ~[\r\n]* STMTEND ) ) -> skip
     ;

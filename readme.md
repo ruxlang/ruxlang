@@ -1,18 +1,25 @@
 ## Rux (ruse) designed for simplicity
 
 ### A neat new language with a strange name
-This language was created from my personal passion for computer programming and I really liked
-some of the directions that languages like [RUST](https://www.rust-lang.org/) and
-[Go](https://golang.org/) were taking, however I found many parts of these languages steeped
-in antiquated "C" language constraints using naming and namespace separators like `println`
+This language was created partly from my personal passion for computer programming and was
+inspire by some of the directions that languages like [RUST](https://www.rust-lang.org/) and
+[Go](https://golang.org/) were taking, however I found many parts of these languages still
+contained antiquated "C" language constraints using naming and namespace separators like `println`
 or `io::stdin`.  I get it, they want the basic language semantics to be familiar to "C"
-developers.  Personally, I think we need to dispense with the old baggage already, so I decided
+developers.  Personally, I think it is time to dispense with the old baggage, so I decided
 to create a more human friendly language with a unique name.  The main goal was to create a
-language a child could pick up without needing to study a dozen computer science textbooks.
+language anyone could pick up without needing to study a dozen computer science textbooks.
+
 Since the premise of this language is on interface abstractions like [Go](https://golang.org/) and
 [RUST](https://www.rust-lang.org/), I decided to call it **Rux**, pronounced *ruse* with a
 soft *x* as in xylophone.  Implementing an interface is like creating a ruse since any component
-could imitate that interface.  Thus the name was born.
+could imitate that interface.  Thus the name was born.  The other premise for this language
+is to simplify the complexities with sync/async I/O stream processing. There is little reason
+for async I/O to be significantly more complicated than sync I/O and with the increasing number
+of processor cores at our disposal the need for performing async processing is only rising
+in order to fully utilize them. Rux solves this by first-classing what is called the `pipe`
+type for streaming data in some ways similar to a shell pipe which all I/O and iteration
+sequences in Rux uses.
 
 ## How this language is different
 OK.  So, we wanted to split from the pack, but why and how much?
@@ -22,20 +29,22 @@ today with immutable by default, mixins, generics, closures, and less function d
 cruft.  The basic "C" language constructs are nearly identical like: semicolon line endings, macros,
 double colon namespace separators (even typing that hurt my head), etc.
 
-We need these in a modern language, really?
+Someone starting with software development will not get all these complexities.  Lets keep the good
+parts of immutability, generics, closures, but keep those namespaces simple.  Forget the double
+colons and just use simply use the `'.'` for all of them.  This might add minor ambiguity, but this
+can easily be resolved in simpler ways like local renaming.
 
 I decided that Go had the closest syntax to my goal for a new language, one that that dispenses
-with the old baggage.  Except that the antiquated naming conventions (Println), and pedantic K&R
-brace handling was still an issue for me, not to mention embedding package management into
-the source files.  I'm sorry, but tracking where the packages come from and which version
-to use shouldn't be the responsibility of the source files and changing this shouldn't break code
-unless an incompatible change happens. It negatively impacts portability and creates unnecessary
-code churn. Go modules improved this, but in this respect I think RUST has it right by handing this
-responsibility to a package management tool.  The final straw, was poor binary library linking
-support.  RUST supports binary shared libraries, and any serious language intent on supporting the
-development of operating system code must support this in order to integrate with code you don't own
-written in other languages.  This leads me to conclude that the Go developers had no intention of
-growing the language beyond being a microservice web application development tool.
+with most of the old baggage so most of the syntax follows similar syntax. Except for the
+antiquated naming conventions `Println` for instance, and pedantic K&R brace handling which to
+me is really a matter of preference. The module support in Go improved, but still tracking where
+the packages come from and which versions to use shouldn't bleed into the source files and changing
+this shouldn't break code unless an incompatible change happens. It negatively impacts portability
+and creates unnecessary code churn. Rux moves this to a package manager and stores all external
+references in the project file instead of the source files. RUST supports binary shared libraries,
+and any serious language intent on supporting the development of operating system code must support
+this in order to integrate with code you don't own written in other languages, so Rux supports this
+as well. Code can be exported as "C" style exports for importing into other languages.
 
 So where do we "Go" from here?
 
@@ -58,10 +67,12 @@ OK, that was a bad pun.  Seriously though.
    code.
 
  * Like Go, it should not need semicolons to end a line or double-colons to reference a namespace,
-   this was needed by compilers ages ago, but it isn't necessary anymore.
+   this was needed by compilers ages ago, but it isn't necessary anymore.  Instead all namespaces
+   are referenced separated by `'.'`.
  
  * Unlike most modern languages these days, it should not require any definitions or
-   imports to write a basic program.
+   imports to write a basic program (Auto-imports).
+
    It should be as simple as:
    ```go
    func main()
@@ -69,19 +80,21 @@ OK, that was a bad pun.  Seriously though.
        io.PrintLine("Hello World")
    }
    ```
+
    Or even simpler without `main()` and using the aliased version of `print()`, where the `!`
    indicates to add a newline character to the string.
    ```go
    print("Hello World"!)
    ```
 
-   However, throwing code in the top-level context outside functions is discouraged.
-   It will execute without any guaranteed order of execution.  The only guarantee is
-   that it will execute when that type is instantiated and in the sequence defined within
-   that file.  The preferred method is to use a constructor since all this code is
-   automatically injected into the constructor at compile time.  Using a constructor makes it
-   explicitly clear what you are doing.  This feature makes the `main()` method unnecessary,
-   except without the order guarantee of using `main()`.
+   However, although it is useful for learning and initial experimenting, throwing code in
+   the top-level context outside functions is greatly discouraged. It will execute without
+   any guaranteed order of execution.  The only guarantee is that it will execute when that
+   type is instantiated and in the sequence defined within that file.  The preferred method
+   is to use a constructor since all this code is automatically injected into the constructor
+   at compile time.  Using a constructor makes it explicitly clear what you are doing.  This
+   feature makes the `main()` method unnecessary, except without the order guarantee of using
+   `main()`.
 
  * The `!` newline suffix adds a newline to any string.  Adding a newline is such a common
    pattern that the old `\n` seems more like a hack and doesn't work with string literals
@@ -107,9 +120,9 @@ OK, that was a bad pun.  Seriously though.
  * Due to the ubiquity with which the `\` escape character is used in strings across
    languages, it is also supported here with most of the C-style escapes and aliases like
    `\n` and `\r`.  One exception is the addition of the `\l` escape representing linefeed
-   (`\x0A`) instead of `\n` like C.  This is because `\n` compiles to an architecture-specific
-   definition of a new line.  On Windows, `\n` is equivalent to `\r\l` and on Linux `\l`.
-   This automatically preserves line endings so less translation is required when writing
+   (`\x0A`).  This is because `\n` compiles to an architecture-specific definition of a
+   new line.  On Windows, `\n` is equivalent to `\r\l` and on Linux `\l`.  This
+   automatically preserves line endings so less translation is required when writing
    or reading files and console I/O on different architectures.
 
  * Like RUST, linking to "C" libraries should be easy, but not require pulling in the whole
@@ -119,7 +132,7 @@ OK, that was a bad pun.  Seriously though.
 
  * Automatic "C" header file handling should be available so library exports can be
    imported automatically and map against builtin types wherever possible. Also,
-   data marshalling should be automatic to remove most the guesswork.
+   data marshalling should be automatic to remove most of the guesswork.
 
  * Like C# 6.0 the `string` builtin type should be a first class citizen of the language
    with formatting built into the design.  Use `fmt.Sprintf()` to format strings?
