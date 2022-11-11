@@ -54,7 +54,7 @@ func sieve()
 		prime := p.Receive()
 		// Embedding a variable or expression in a string is supported by default, optionally
 		// formatting can be provided by a colon after the name or ecpression.
-		fmt.Print("{prime}\n")
+		fmt.Print("{prime}"!)
 		// Because filter is an output pipe method it will return the output pipe immediately
 		// when run starts, the pipe provides an async receiver.
 		p1 := run filter(p, prime)

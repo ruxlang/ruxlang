@@ -348,11 +348,11 @@ STRING_LIT
     ;
 
 fragment RAW_STRING_LIT
-    : '`' ( RAW_STRING_CHAR | NEWLINE )* '`'
+    : '`' ( RAW_STRING_CHAR | NEWLINE )* ('`'|'`!')
     ;
 
 fragment INTERPRETED_STRING_LIT
-    : '"' ( STRING_CHAR | BYTE_VALUE )* '"'
+    : '"' ( STRING_CHAR | BYTE_VALUE )* ('"'|'"!')
     ;
 
 fragment STRING_CHAR
