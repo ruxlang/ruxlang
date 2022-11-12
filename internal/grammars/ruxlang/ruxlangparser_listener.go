@@ -235,8 +235,8 @@ type RuxlangParserListener interface {
 	// EnterBasicLit is called when entering the basicLit production.
 	EnterBasicLit(c *BasicLitContext)
 
-	// EnterSequenceLit is called when entering the sequenceLit production.
-	EnterSequenceLit(c *SequenceLitContext)
+	// EnterSequenceExpr is called when entering the sequenceExpr production.
+	EnterSequenceExpr(c *SequenceExprContext)
 
 	// EnterOperandName is called when entering the operandName production.
 	EnterOperandName(c *OperandNameContext)
@@ -535,8 +535,8 @@ type RuxlangParserListener interface {
 	// ExitBasicLit is called when exiting the basicLit production.
 	ExitBasicLit(c *BasicLitContext)
 
-	// ExitSequenceLit is called when exiting the sequenceLit production.
-	ExitSequenceLit(c *SequenceLitContext)
+	// ExitSequenceExpr is called when exiting the sequenceExpr production.
+	ExitSequenceExpr(c *SequenceExprContext)
 
 	// ExitOperandName is called when exiting the operandName production.
 	ExitOperandName(c *OperandNameContext)

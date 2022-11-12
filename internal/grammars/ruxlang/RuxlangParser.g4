@@ -67,10 +67,10 @@ binaryOp
 // A top level declaration supports running statements at the top level
 // although this is discouraged by linters except for rxsh syntax usage
 topLevelDecl
-    : ( declaration
+    : declaration
     | functionDecl
     | methodDecl
-    | topLevelStatement )
+    | topLevelStatement
     ;
 
 declaration
@@ -383,13 +383,13 @@ operand
     : literal
     | operandName
     | methodExpr
+    | sequenceExpr
     | runExpr
     | PAREN_START expression PAREN_END
     ;
 
 literal
     : basicLit
-    | sequenceLit
     | compositeLit
     | functionLit
     ;
@@ -402,8 +402,8 @@ basicLit
     | STRING_LIT
     ;
 
-sequenceLit
-    : ( INT_LIT | IDENTIFIER ) '..' ( INT_LIT | IDENTIFIER )?
+sequenceExpr
+    : ( literal | operandName ) SEQ_SEP ( literal | operandName )?
     ;
 
 operandName

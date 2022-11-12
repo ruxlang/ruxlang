@@ -476,11 +476,11 @@ func (s *BaseRuxlangParserListener) EnterBasicLit(ctx *BasicLitContext) {}
 // ExitBasicLit is called when production basicLit is exited.
 func (s *BaseRuxlangParserListener) ExitBasicLit(ctx *BasicLitContext) {}
 
-// EnterSequenceLit is called when production sequenceLit is entered.
-func (s *BaseRuxlangParserListener) EnterSequenceLit(ctx *SequenceLitContext) {}
+// EnterSequenceExpr is called when production sequenceExpr is entered.
+func (s *BaseRuxlangParserListener) EnterSequenceExpr(ctx *SequenceExprContext) {}
 
-// ExitSequenceLit is called when production sequenceLit is exited.
-func (s *BaseRuxlangParserListener) ExitSequenceLit(ctx *SequenceLitContext) {}
+// ExitSequenceExpr is called when production sequenceExpr is exited.
+func (s *BaseRuxlangParserListener) ExitSequenceExpr(ctx *SequenceExprContext) {}
 
 // EnterOperandName is called when production operandName is entered.
 func (s *BaseRuxlangParserListener) EnterOperandName(ctx *OperandNameContext) {}

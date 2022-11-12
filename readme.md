@@ -266,11 +266,16 @@ OK, that was a bad pun.  Seriously though.
    _=core@v0.1 # Imports the rux core 0.1 namespace and removes 'core' from the namespace so core.io.file
                # becomes just io.file, the FQDN part of the path is optional for rux core packages
                # Anything originally in the 'core' namespace becomes a built-in like "print"
+               # If the project file or config section is missing, this is the default
    lexer=github.com/antlr/antlr4.lexer@v4.7.2 # Imports only antlr4.lexer from the antlr4 namespace
                                               # This will also alias the namespace antlr4.lexer to lexer
    [test]
    test=core.test@v0.1 # Imports test core package namespace as a test dependency
+                       # If the project file or config section is missing, this is the default
    ```
    Testing dependencies can be added as well and will be imported only when building tests.
    Segregating these dependencies improves build times.  You can basically add any dependency
-   sections for each custom keyword or tag.
+   sections for each custom keyword or tag.  Any dependencies not mentioned in the project
+   file that those in the project file depend upon will be imported at build time so in most
+   cases only direct dependencies should need to be mentioned this keeps the project file
+   small and managable.
