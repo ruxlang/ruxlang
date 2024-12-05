@@ -2,7 +2,7 @@
 
 ### A neat new language with a strange name
 This language was created partly from my personal passion for computer programming and was
-inspire by some of the directions that languages like [RUST](https://www.rust-lang.org/) and
+inspired by some of the directions that languages like [RUST](https://www.rust-lang.org/) and
 [Go](https://golang.org/) were taking, however I found many parts of these languages still
 contained antiquated "C" language constraints using naming and namespace separators like `println`
 or `io::stdin`.  I get it, they want the basic language semantics to be familiar to "C"
